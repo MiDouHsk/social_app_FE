@@ -33,7 +33,7 @@ const Main = () => {
                 </div>
                 <span>{/* put progressBar */}</span>
                 <div className="flex justify-around items-center pt-4">
-                    <div className="flex items-center">
+                    <div className="flex items-center hover:bg-gray-100 rounded-xl">
                         <label
                             htmlFor="addImage"
                             className="cursor-pointer flex items-center">
@@ -41,13 +41,13 @@ const Main = () => {
                             <input type="file" id="addImage" style={{ display: "none" }} />
                         </label>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center hover:bg-gray-100 rounded-xl">
                         <img className="h-8 mr-4" src={live} alt="live" />
                         <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
                             Live
                         </p>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center hover:bg-gray-100 rounded-xl">
                         <img className="h-8 mr-4" src={smile} alt="feeling" />
                         <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
                             Feeling
