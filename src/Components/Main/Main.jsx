@@ -3,6 +3,7 @@ import avatar from '../../assets/imgs/IMG_0482.PNG';
 import live from '../../assets/imgs/live.png';
 import smile from '../../assets/imgs/smile.png';
 import addImage from '../../assets/imgs/add-image.png';
+import PostCard from "./PostCard";
 
 const Main = () => {
     return (
@@ -57,7 +58,7 @@ const Main = () => {
             </div>
             <div className="flex flex-col py-4 w-full">{/* posts */}</div>
             <div>
-                {/* reference for later */}
+                <PostCard></PostCard>
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import React from "react";
 import avatar from '../../assets/imgs/IMG_0482.PNG';
-import like from "../../assets/imgs/live.png";
+import like from "../../assets/imgs/like.png";
 import comment from "../../assets/imgs/comment.png";
 import remove from "../../assets/imgs/delete.png";
 import addFriend from "../../assets/imgs/add-friend.png";
