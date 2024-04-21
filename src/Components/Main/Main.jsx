@@ -1,11 +1,57 @@
-import React from "react";
-import avatar from '../../assets/imgs/IMG_0482.PNG';
+import React, { useState } from "react";
+import axios from "axios";
+
 import live from '../../assets/imgs/live.png';
 import smile from '../../assets/imgs/smile.png';
 import addImage from '../../assets/imgs/add-image.png';
 import PostCard from "./PostCard";
 
 const Main = () => {
+    const [title, setTitle] = useState("");
+    const [body, setBody] = useState("");
+    const [status, setStatus] = useState("");
+    const [error, setError] = useState("");
+    const [postStatus, setPostStatus] = useState("");
+    const [avatar, setAvatar] = useState(""); // Thêm state để lưu trữ avatar của người tạo bài post
+    const [userId, setUserId] = useState(""); // Thêm state để lưu trữ userId của người tạo bài post
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:8080/posts/create', {
+                title: title,
+                body: body,
+                status: status
+            });
+
+            // Xử lý phản hồi thành công
+            console.log("Post created:", response.data);
+
+            // Lấy thông tin người tạo bài post từ response
+            const { avatar, userId } = response.data;
+
+            // Cập nhật state với thông tin người tạo bài post
+            setAvatar(avatar);
+            setUserId(userId);
+
+            // Reset form fields
+            setTitle("");
+            setBody("");
+            setStatus("");
+            setError("");
+
+            // Cập nhật trạng thái của bài viết
+            setPostStatus("Post successfully created!");
+            setError(""); // Xóa thông báo lỗi nếu có
+
+        } catch (error) {
+            console.error('Error:', error);
+            // Xử lý lỗi
+            setError("Failed to create post. Please try again later.");
+            setPostStatus(""); // Xóa thông báo trạng thái nếu có
+        }
+    };
+
     return (
         <div className="flex flex-col items-center">
             <div className="flex flex-col py-2 w-full bg-white rounded-3xl shadow-lg">
@@ -13,15 +59,24 @@ const Main = () => {
                     <img className="w-10 h-10 rounded-full"
                         src={avatar}
                         alt="avatar" />
-                    <form action="" className="w-full">
+                    <form onSubmit={handleSubmit} className="w-full">
                         <div className="flex justify-between items-center">
                             <div className="w-full ml-4">
+                                {/* Thêm trường input để nhập tiêu đề */}
+                                <input
+                                    type="text"
+                                    name="title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    placeholder="Enter title"
+                                    className="outline-none w-full bg-white rounded-md" />
                                 <input
                                     type="text"
                                     name="text"
-                                    id=""
-                                    placeholder="What on your mine User"
-                                    className="outline-none w-full bg-white rounded-md" />
+                                    value={body}
+                                    onChange={(e) => setBody(e.target.value)}
+                                    placeholder="What's on your mind, User"
+                                    className="outline-none w-full bg-white rounded-md mt-2" />
                             </div>
                             <div className="mx-4"> { /* put previewImage */}</div>
                             <div className="mr-4">
@@ -58,7 +113,8 @@ const Main = () => {
             </div>
             <div className="flex flex-col py-4 w-full">{/* posts */}</div>
             <div>
-                <PostCard></PostCard>
+                {/* Truyền thông tin người tạo bài post xuống PostCard component */}
+                <PostCard avatar={avatar} userId={userId}></PostCard>
             </div>
         </div>
     );

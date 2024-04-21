@@ -3,10 +3,10 @@ import { ListPic } from "../../assets/ListPic";
 
 const LeftSideProfilePic = () => {
     return (
-        <div class="flex flex-col bg-white pb-4 border-2 rounded-r-xl shadow-lg mb-4">
+        <div class="flex flex-col bg-white pb-4 border-2 rounded-xl shadow-lg mb-4">
             <div class="flex flex-col font-bold items-center pt-10 mb-10">
                 <p class="font-roboto font-medium text-md no-underline tracking-normal leading-none">
-                    Picture:
+                    Hình Ảnh:
                 </p>
             </div>
             <div className="flex flex-col mx-1 ">

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const RightSide = () => {
+const LeftSideFriend = () => {
     const [followingList, setFollowingList] = useState([]);
 
     useEffect(() => {
         const fetchFollowingList = async () => {
             try {
                 const accessToken = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8080/follows/ListUsers/following', {
+                const response = await axios.get('http://localhost:8080/follows/ListUsers/follower', {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
@@ -22,20 +22,9 @@ const RightSide = () => {
     }, []);
 
     return (
-        <div className="flex flex-col h-screen bg-white shadow-lg border-2 rounded-l-xl w-full">
-            <div className="mx-2 my-2">
-                <form className="max-w-md mx-auto">
-                    <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                            </svg>
-                        </div>
-                        <input type="search" id="default-search" className="block w-full p-4 pl-10 text-sm text-black border border-gray-300 rounded-lg bg-gray-50" placeholder="Search... " required />
-                        <button type="submit" className="text-black absolute right-2.5 bottom-2.5 hover:text-white  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">Search</button>
-                    </div>
-                </form>
+        <div className="flex flex-col">
+            <div className="text-center py-3">
+                <h2 className="text-lg font-semibold text-gray-800">Danh sách người theo dõi:</h2>
             </div>
             <div className="mx-5 text">
                 <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
@@ -56,13 +45,10 @@ const RightSide = () => {
                             </div>
                         </li>
                     ))}
-
                 </ul>
             </div>
-            <p className="font-roboto font-normal text-sm text-gray-700 max-w-fit no-underline tracking-normal leading-tight py-2 mx-2">
-            </p>
         </div>
     );
 };
 
-export default RightSide;
+export default LeftSideFriend;

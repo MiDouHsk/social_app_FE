@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,23 +17,26 @@ const Login = () => {
                     password: password
                 }
             });
-            
+
             // Lấy token từ phản hồi
             const token = response.data["token: "];
             console.log("Token:", token);
 
-            
+
             // Lưu trữ token vào Local Storage hoặc Redux Store
             localStorage.setItem("token", token);
-            window.location.href = '/home';
+
+            // Chuyển hướng tới trang home
+            navigate('/home');
+
         } catch (error) {
             console.error('Error:', error);
             // Xử lý lỗi
             if (error.response) {
                 if (error.response.status === 401) {
-                     setError(error.response.data);
+                    setError(error.response.data);
                 } else if (error.response.status === 404) {
-                     setError(error.response.data);
+                    setError(error.response.data);
                 } else {
                     setError("An unexpected error occurred. Please try again later");
                 }
@@ -42,6 +47,7 @@ const Login = () => {
             }
         }
     };
+
 
     return (
         <div className="grid grid-cols-1 h-screen justify-items-center items-center">

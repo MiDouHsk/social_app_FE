@@ -1,12 +1,15 @@
-import React, { useState } from "react";
-import { ListDataFriend } from "../../assets/ListDataFriend";
+import React from "react";
 
-const LeftSideFriend = () => {
-    const [searchTerm, setSearchTerm] = useState("");
+const LeftSideFriend = ({ setCurrentFunction }) => {
+    // Hàm xử lý khi người dùng click vào nút bạn bè
+    const handleFriendsClick = () => {
+        setCurrentFunction("following");
+    };
 
-    const filteredFriends = ListDataFriend.filter((friend) =>
-        friend.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Hàm xử lý khi người dùng click vào nút video
+    const handleVideoClick = () => {
+        setCurrentFunction("follower");
+    };
 
     return (
         <div className="flex flex-col bg-white shadow-lg border-2 rounded-r-xl w-full">
@@ -27,8 +30,8 @@ const LeftSideFriend = () => {
                             id="default-search"
                             className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Tìm kiếm..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            // value={searchTerm}
+                            // onChange={(e) => setSearchTerm(e.target.value)}
                             required
                         />
                         <button
@@ -44,23 +47,17 @@ const LeftSideFriend = () => {
 
             <div className="mx-5 text">
                 <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
-                    {filteredFriends.map((friend) => (
-                        <li key={friend.id} className="pb-3 sm:pb-4">
-                            <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                                <div className="flex-shrink-0">
-                                    <img className="w-8 h-8 rounded-full object-cover" src={friend.image} alt={friend.name} />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-400">
-                                        {friend.name}
-                                    </p>
-                                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                        {friend.email}
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
+                    {/* Render các nút bạn bè và video */}
+                    <li className="pb-3 sm:pb-4">
+                        <button onClick={handleFriendsClick} className="text-sm font-medium text-gray-900 truncate dark:text-gray-400">
+                            danh sách những người bạn theo dõi ( following )
+                        </button>
+                    </li>
+                    <li className="pb-3 sm:pb-4">
+                        <button onClick={handleVideoClick} className="text-sm font-medium text-gray-900 truncate dark:text-gray-400">
+                            danh sách những người theo dõi bạn ( follower )
+                        </button>
+                    </li>
                 </ul>
             </div>
             <p className="font-roboto font-normal text-sm text-gray-700 max-w-fit no-underline tracking-normal leading-tight py-2 mx-2"></p>

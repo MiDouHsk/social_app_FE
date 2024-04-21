@@ -51,30 +51,4 @@ export const ListPic = [
         id: "9",
         image: pic9,
     },
-    // {
-    //     id: "10",
-    //     image: pic10,
-    // },
-    // {
-    //     id: "11",
-    //     image: pic11,
-    // },
-    // {
-    //     id: "12",
-    //     image: pic12,
-    // },
-    // {
-    //     id: "13",
-    //     image: pic13,
-    // },
-    // {
-    //     id: "14",
-    //     image: pic14,
-    // },
-    // {
-    //     id: "15",
-    //     image: pic15,
-    // },
-
-
 ];

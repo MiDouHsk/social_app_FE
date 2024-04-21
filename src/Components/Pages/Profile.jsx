@@ -1,65 +1,243 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Navbar from "../Navbar/Navbar";
-import background from '../../assets/imgs/IMG_1052.JPG';
-import avatar from '../../assets/imgs/IMG_0482.PNG';
 import PostCard from "../Main/PostCard";
-import LeftSideProfile from "../LeftSidebar/LeftSideProfile";
-import LeftSideProfileFriend from "../LeftSidebar/LeftSideProfileFriend";
+import LeftSideProfileFriend from "../Follow/Following";
 import LeftSideProfilePic from "../LeftSidebar/LeftSideProfilePic";
+import background from '../../assets/imgs/IMG_1052.JPG';
+import userService from "../serivce/userService";
+import Follows from "../Follow/Follows";
 
-const FriendProfile = () => {
+const Profile = () => {
+    const [userInfo, setUserInfo] = useState(null);
+    const [error, setError] = useState(null);
+    const [followerCount, setFollowerCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0);
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        gender: false, // Gender is now a boolean
+        phoneNumber: '',
+        dateOfBirth: '',
+        address: '',
+        mail: '',
+        createAt: '',
+    });
+
+    useEffect(() => {
+        const fetchFollowerCount = async () => {
+            try {
+                const accessToken = localStorage.getItem('token'); // Lấy token từ localStorage
+                console.log("Token:", accessToken);
+                const response = await axios.get('http://localhost:8080/follows/followerCount', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}` // Thêm token vào tiêu đề 'Authorization'
+                    }
+                });
+                setFollowerCount(response.data);
+            } catch (error) {
+                console.error('Error fetching follower count:', error);
+            }
+        };
+
+        const fetchFollowingCount = async () => {
+            try {
+                const accessToken = localStorage.getItem('token'); // Lấy token từ localStorage
+                console.log("Token:", accessToken);
+                const response = await axios.get('http://localhost:8080/follows/followingCount', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}` // Thêm token vào tiêu đề 'Authorization'
+                    }
+                });
+                setFollowingCount(response.data);
+            } catch (error) {
+                console.error('Error fetching following count:', error);
+            }
+        };
+
+        fetchFollowerCount();
+        fetchFollowingCount();
+    }, []);
+
+
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            const accessToken = localStorage.getItem('token');
+            console.log("Token:", accessToken);
+
+            if (!accessToken) {
+                console.error('Access token not found');
+
+                return;
+            }
+
+            try {
+                const userData = await userService.getUserDetails(accessToken);
+                setUserInfo(userData);
+            } catch (error) {
+                setError(error);
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
+
+    if (error) {
+        return <div className="text-red-500">Error: {error}</div>;
+    }
+
+    if (!userInfo) {
+        return <div className="text-gray-500">Loading...</div>;
+    }
 
     return (
-        <div className="w-full ">
-            <div className="fixed top-0 z-10 w-full bg-white">
+        <div className="w-full bg-gray-100">
+            <div className="fixed z-10 w-full bg-white">
                 <Navbar></Navbar>
             </div>
-            <div class="flex mb-28 bg-white">
-                <div class="flex-auto w-4/5 mx-auto relative">
-                    <div className="flex flex-col items-center relative bg-white">
-                        <div className="relative w-[80%] h-96 overflow-hidden rounded-xl">
-                            <img className="absolute inset-0 w-full h-full object-cover" src={background} alt="background" />
-                            <div className="absolute inset-0 bg-black opacity-25"></div>
+            <div className="flex mb-6 flex-wrap items-center  justify-center bg-gray-100">
+                <div className="container   bg-white  shadow-lg    transform   duration-200 easy-in-out">
+                    <div className=" h-80 overflow-hidden" >
+                        <img className="w-full" src={background} alt="background" />
+                    </div>
+                    <div className="flex justify-center px-5  -mt-12">
+                        <img
+                            className="h-40 w-40 bg-white p-2 rounded-full"
+                            src={userInfo && userInfo.avatar !== null ? userInfo.avatar : "placeholder.jpg"}
+                            alt="avatar"
+                        />
+                    </div>
+                    <div className=" ">
+                        <div className="text-center px-14">
+                            <h2 className="text-gray-800 text-3xl font-bold">{userInfo.username}</h2>
+                            <a className="text-gray-400 mt-4 hover:text-blue-500" href="" target="BLANK()">@ {userInfo.mail}</a>
                         </div>
-                        <div class="absolute bottom-1 left-[20%] transform -translate-x-1/2 translate-y-1/2">
-                            <div class="h-36 w-36 rounded-full bg-white flex items-center justify-center">
-                                <img class="h-32 w-32 rounded-full"
-                                    sizes="md"
-                                    src={avatar}
-                                    alt="avatar" />
+                        <hr className="mt-6" />
+                        <div className="flex  bg-gray-50 ">
+                            <div className="text-center w-1/2 p-4 hover:bg-gray-100 cursor-pointer">
+                                <p><span className="font-semibold"> {followerCount} </span> Followers</p>
                             </div>
-                            <p class="mt-2 text-lg font-semibold text-gray-900 text-center justify-center items-center">midouHsk</p>
+                            <div className="border"></div>
+                            <div className="text-center w-1/2 p-4 hover:bg-gray-100 cursor-pointer">
+                                <p> <span className="font-semibold"> {followingCount} </span> Following</p>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="">
-                
+
+            <div className="w-4/5 mx-auto">
+                <div className="bg-white overflow-hidden shadow rounded-lg border">
+                    <div className="px-4 py-5 sm:px-6">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                            User Profile
+                        </h3>
+                        <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                            This is some information about the user.
+                        </p>
+                    </div>
+                    <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
+                        <dl className="sm:divide-y sm:divide-gray-200">
+                            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt className="text-sm font-medium text-gray-500">
+                                    Full name
+                                </dt>
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    {userInfo.lastName} {userInfo.firstName}
+                                </dd>
+                            </div>
+                            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt className="text-sm font-medium text-gray-500">
+                                    Email address
+                                </dt>
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    {userInfo.mail}
+                                </dd>
+                            </div>
+                            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt className="text-sm font-medium text-gray-500">
+                                    Phone number
+                                </dt>
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    {userInfo.phoneNumber}
+                                </dd>
+                            </div>
+                            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt className="text-sm font-medium text-gray-500">
+                                    Address
+                                </dt>
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    {userInfo.address}
+                                </dd>
+                            </div>
+                            <div className="flex justify-between py-3 sm:py-5 sm:grid sm:grid-cols-5 text-center">
+                                <div className=" cursor-pointer">
+                                    <dt className="text-sm font-medium text-gray-500  cursor-pointer">
+                                        menu
+                                    </dt>
+                                    <dd className="">
+                                        {userInfo.address}
+                                    </dd>
+                                </div>
+                                <div className=" cursor-pointer">
+                                    <dt className="text-sm font-medium text-gray-500">
+                                        All picture
+                                    </dt>
+                                    <dd className="">
+                                        {userInfo.address}
+                                    </dd>
+                                </div>
+                                <div className=" cursor-pointer">
+                                    <dt className="text-sm font-medium text-gray-500">
+                                        All posts
+                                    </dt>
+                                    <dd className="">
+                                        {userInfo.address}
+                                    </dd>
+                                </div>
+                                <div className=" cursor-pointer">
+                                    <dt className="text-sm font-medium text-gray-500">
+                                        updateProfile
+                                    </dt>
+                                    <dd className="">
+                                        {userInfo.address}
+                                    </dd>
+                                </div>
+                                <div className=" cursor-pointer">
+                                    <dt className="text-sm font-medium text-gray-500">
+                                        SignOut
+                                    </dt>
+                                    <dd className="">
+                                        {userInfo.address}
+                                    </dd>
+                                </div>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
             </div>
 
-            <div class="w-4/5 mx-auto bg-gray-100">
-                <div class=" gap-5 flex">
-                    <div class="w-[40%] mt-8">
-                        <div>
-                            <LeftSideProfile></LeftSideProfile>
-                        </div>
+
+            <div className="mx-auto bg-gray-100">
+                <div class="gap-5 w-4/5 mx-auto flex flex-col md:flex-row">
+                    <div class="mt-8 justify-center w-[30%] mx-auto hidden md:block">
                         <div>
                             <LeftSideProfilePic></LeftSideProfilePic>
                         </div>
                         <div>
-                            <LeftSideProfileFriend></LeftSideProfileFriend>
+                            <Follows></Follows>
                         </div>
                     </div>
-                    <div class="w-[60%] mx-auto justify-center mt-8">
-                        <PostCard></PostCard>
+                    <div class="w-full md:w-[70%] mx-auto justify-center mt-8 md:pl-0 md:pr-8">
                         <PostCard></PostCard>
                         <PostCard></PostCard>
                     </div>
                 </div>
             </div>
-
         </div>
     );
 };
 
-export default FriendProfile;
+export default Profile;

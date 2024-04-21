@@ -1,27 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./Home";
-import { Routes, Route } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import Reset from "./Reset";
 import Profile from "./Profile";
 import Friends from "./Friends";
 import VideoShow from "./VideoShow";
+import Picture from "./Picture";
 
 const Pages = () => {
+    const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        if (token) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+            navigate("/login");
+        }
+    }, [navigate]);
+
     return (
         <div>
             <Routes>
-                <Route path="/home" element={<Home></Home>}></Route>
-                <Route path="/login" element={<Login></Login>}></Route>
-                <Route path="/register" element={<Register></Register>}></Route>
-                <Route path="/reset" element={<Reset></Reset>}></Route>
-                <Route
-                    path="/profile"
-                    element={<Profile></Profile>}>
-                </Route>
-                <Route path="/friend" element={<Friends></Friends>}></Route>
-                <Route path="/video" element={<VideoShow></VideoShow>}></Route>
+                {isLoggedIn && (
+                    <>
+                        <Route path="/home" element={<Home />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/reset" element={<Reset />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/friend" element={<Friends />} />
+                        <Route path="/video" element={<VideoShow />} />
+                        <Route path="/picture" element={<Picture />} />
+                    </>
+                )}
+                <Route path="/login" element={<Login />} />
             </Routes>
         </div>
     );
