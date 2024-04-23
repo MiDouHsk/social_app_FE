@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 
 const UserLinks = ({ name, avatar }) => {
-const avatarUrl = avatar.startsWith("http") ? avatar : `http://localhost:9000/${avatar}`;
+    const avatarUrl = avatar.startsWith("http") ? avatar : `http://localhost:9000/${avatar}`;
 
     return (
         <div className="flex justify-center items-center cursor-pointer">
-
             <div className="hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
                 <Link to="/route1">
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +38,12 @@ const avatarUrl = avatar.startsWith("http") ? avatar : `http://localhost:9000/${
             </div>
             <div className="flex flex-col pl-2">
                 <Link to="/profile" className="flex items-center">
-                    <img className="w-8 h-8 rounded-full mx-4 object-cover" src={avatarUrl} alt="avatar" />
+                    {/* <img
+                        className="w-8 h-8 rounded-full mx-4 object-cover"
+                        src={typeof avatarUrl === 'string' ? avatarUrl : null}
+                        alt="avatar"
+                        style={{ backgroundColor: avatarUrl ? "" : "brown" }}
+                    /> */}
                     <div className="font-medium dark:text-gray-900">
                         {name}
                     </div>
@@ -49,4 +53,4 @@ const avatarUrl = avatar.startsWith("http") ? avatar : `http://localhost:9000/${
     );
 };
 
-export default UserLinks;
+export default memo(UserLinks);

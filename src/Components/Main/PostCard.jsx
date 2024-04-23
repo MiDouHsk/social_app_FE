@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import moment from "moment";
-import like from "../../assets/imgs/like.png";
-import comment from "../../assets/imgs/comment.png";
-import remove from "../../assets/imgs/delete.png";
 
-const PostCard = () => {
+const PostCard = ({ reloadPosts }) => {
     const [posts, setPosts] = useState([]);
     const [userInfo, setUserInfo] = useState(null);
     const [error, setError] = useState(null);
@@ -38,7 +34,7 @@ const PostCard = () => {
         };
 
         fetchPosts(0, 5);
-    }, []);
+    }, [reloadPosts]);
 
     return (
         <div>
@@ -50,7 +46,6 @@ const PostCard = () => {
                                 <img
                                     className="w-10 h-10 rounded-full object-cover"
                                     src={`http://localhost:9000/${post.userId.avatar}`}
-//                                        src={avatarUrl}
                                     alt="avatar"
                                 />
                             ) : (
@@ -62,7 +57,7 @@ const PostCard = () => {
                                     {post.userId && post.userId.mail ? post.userId.mail : "Unknown email"}
                                 </p>
                                 <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
-                                    {moment(post.createAt).format('DD/MM/YYYY')}
+                                    {moment(post.createAt).format('DD/MM/YYYY HH:mm:ss')}
                                 </p>
                             </div>
 
@@ -74,26 +69,24 @@ const PostCard = () => {
                                 </svg>
                             </div>
                         </div>
-                        <div className="mx-8">
+                        <div className="mx-8 h-auto">
                             <p className="ml-4 pb-4 font-roboto font-bold text-sm text-gray-700 no-underline tracking-normal leading-none">
                                 {post.title}
                             </p>
                             <p className="ml-4 pb-4 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
                                 {post.body}
                             </p>
-                            {post.medias.length > 0 && (
-                                post.medias[0].publicUrl.endsWith('.mp4') ? (
-                                    <video className="w-full rounded-xl" controls>
-                                        <source src={`http://localhost:9000/${post.medias[0].publicUrl}`} type="video/mp4" />
-                                        Your browser does not support the video tag.
-                                    </video>
-                                ) : (
-                                    <img className="h-[500px] w-full rounded-xl" src={`http://localhost:9000/${post.medias[0].publicUrl}`} alt="postImage" />
-                                )
-                            )}
-
-
-
+                            <div>
+                                {post.medias.length > 0 && (
+                                    post.medias[0].publicUrl.endsWith('.mp4') ? (
+                                        <video className="w-full rounded-xl max-h-800" controls>
+                                            <source src={`http://localhost:9000/${post.medias[0].publicUrl}`} type="video/mp4" />
+                                        </video>
+                                    ) : (
+                                        <img className="w-full h-full rounded-xl max-h-800" src={`http://localhost:9000/${post.medias[0].publicUrl}`} alt="postImage" />
+                                    )
+                                )}
+                            </div>
                         </div>
                         <div className="flex justify-around items-center pt-4">
                             <button className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100">

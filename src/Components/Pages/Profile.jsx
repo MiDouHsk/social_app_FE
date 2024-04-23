@@ -104,11 +104,13 @@ const Profile = () => {
                         <img className="w-full" src={background} alt="background" />
                     </div>
                     <div className="flex justify-center px-5  -mt-12">
-                        <img
+                        {/* <img
                             className="h-40 w-40 bg-white p-2 rounded-full object-cover"
-                            src={urlAvatar}
+                            src={urlAvatar instanceof Error ? null : urlAvatar || "default-avatar-url"}
                             alt="avatar"
-                        />
+                            onError={() => setUrlAvatar(null)}
+                            style={{ backgroundColor: urlAvatar ? "" : "brown" }}
+                        /> */}
                     </div>
                     <div className=" ">
                         <div className="text-center px-14">
@@ -179,41 +181,26 @@ const Profile = () => {
                                     <dt className="text-sm font-medium text-gray-500  cursor-pointer">
                                         menu
                                     </dt>
-                                    <dd className="">
-                                        {userInfo.address}
-                                    </dd>
                                 </div>
                                 <div className=" cursor-pointer">
                                     <dt className="text-sm font-medium text-gray-500">
                                         All picture
                                     </dt>
-                                    <dd className="">
-                                        {userInfo.address}
-                                    </dd>
                                 </div>
                                 <div className=" cursor-pointer">
                                     <dt className="text-sm font-medium text-gray-500">
                                         All posts
                                     </dt>
-                                    <dd className="">
-                                        {userInfo.address}
-                                    </dd>
                                 </div>
                                 <div className=" cursor-pointer">
                                     <dt className="text-sm font-medium text-gray-500">
                                         updateProfile
                                     </dt>
-                                    <dd className="">
-                                        {userInfo.address}
-                                    </dd>
                                 </div>
                                 <div className=" cursor-pointer">
                                     <dt className="text-sm font-medium text-gray-500">
                                         SignOut
                                     </dt>
-                                    <dd className="">
-                                        {userInfo.address}
-                                    </dd>
                                 </div>
                             </div>
                         </dl>
@@ -233,7 +220,6 @@ const Profile = () => {
                         </div>
                     </div>
                     <div class="w-full lg:w-[70%] mx-auto justify-center mt-8 md:pl-0 md:pr-8">
-                        <PostCard></PostCard>
                         <PostCard></PostCard>
                     </div>
                 </div>

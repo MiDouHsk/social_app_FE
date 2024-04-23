@@ -4,6 +4,7 @@ import LeftSide from "../LeftSidebar/LeftSide";
 import RightSide from "../RightSidebar/RightSide";
 import CardSelection from "../Main/CardSelection";
 import Main from "../Main/Main";
+import Notification from "../Notification/Notification";
 
 const Home = () => {
     return (

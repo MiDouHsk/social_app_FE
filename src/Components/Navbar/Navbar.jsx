@@ -51,7 +51,9 @@ const Navbar = () => {
                 <NavLinks />
             </div>
             <div className="flex justify-center items-center">
-                {userInfo && <UserLinks name={userInfo.username} avatar={userInfo.avatar} />}
+                {userInfo && userInfo.avatar && userInfo.username && (
+                    <UserLinks name={userInfo.username} avatar={userInfo.avatar} />
+                )}
             </div>
         </div>
     );

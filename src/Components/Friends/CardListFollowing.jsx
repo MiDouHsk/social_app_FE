@@ -31,7 +31,6 @@ const CardListFollowing = () => {
                 return;
             }
 
-
             // Tiếp tục gửi yêu cầu unfollow với token và userId đã được xác thực
             await axios.delete(`http://localhost:8080/follow/unfollow/${id}`, {
                 headers: {
