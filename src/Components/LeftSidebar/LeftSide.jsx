@@ -16,7 +16,7 @@ const LeftSide = () => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
-        gender: false, // Gender is now a boolean
+        gender: false,
         phoneNumber: '',
         dateOfBirth: '',
         address: '',
@@ -28,7 +28,7 @@ const LeftSide = () => {
         const fetchFollowerCount = async () => {
             try {
                 const accessToken = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8080/follows/followerCount', {
+                const response = await axios.get('http://localhost:8080/follow/followerCount', {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
@@ -42,7 +42,7 @@ const LeftSide = () => {
         const fetchFollowingCount = async () => {
             try {
                 const accessToken = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8080/follows/followingCount', {
+                const response = await axios.get('http://localhost:8080/follow/followingCount', {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
@@ -87,14 +87,6 @@ const LeftSide = () => {
 
     };
 
-    if (error) {
-        return <div className="text-red-500">Error: {error}</div>;
-    }
-
-    if (!userInfo) {
-        return <div className="text-gray-500">Loading...</div>;
-    }
-
     return (
         <div className="flex flex-col h-screen bg-white pb-4 border-2 rounded-r-xl shadow-lg">
             <div className="flex flex-col items-center relative">
@@ -112,10 +104,10 @@ const LeftSide = () => {
                     User email:
                 </p>
                 <p className="font-roboto font-medium text-xs text-gray-700 no-underline tracking-normal leading-none">
-                    {userInfo.mail}
+{/*                     {userInfo.mail} */}
                 </p>
                 <p className="font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none py-2">
-                    {userInfo.username}
+{/*                     {userInfo.username} */}
                 </p>
             </div>
             <div className="flex flex-col pl-2 text-gray-700 dark:text-gray-500 bg-gray-100">
@@ -126,7 +118,7 @@ const LeftSide = () => {
                 <div className="flex items-center py-2 mx-4">
                     <img className="h-10" src={map} alt="map" />
                     <p className="font-roboto font-bold text-lg no-underline tracking-normal leading-none">
-                        {userInfo.address}
+{/*                         {userInfo.address} */}
                     </p>
                 </div>
             </div>

@@ -8,10 +8,14 @@ const Login = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    const handleRegisterClick = () => {
+        navigate('/register');
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/user/login', null, {
+            const response = await axios.post('http://localhost:8080/user/auth/login', null, {
                 params: {
                     username: username,
                     password: password
@@ -99,9 +103,9 @@ const Login = () => {
                     </button>
                     <div className="text-sm font-medium text-gray-500">
                         Not registered?{" "}
-                        <a href="/register" className="text-blue-700 hover:underline">
+                        <button  onClick={handleRegisterClick} className="text-blue-700 hover:underline">
                             Create account
-                        </a>
+                        </button>
                     </div>
                 </form>
             </div>

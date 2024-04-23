@@ -12,6 +12,7 @@ const Profile = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [error, setError] = useState(null);
     const [followerCount, setFollowerCount] = useState(0);
+    const [urlAvatar, setUrlAvatar] = useState(' ');
     const [followingCount, setFollowingCount] = useState(0);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -19,6 +20,7 @@ const Profile = () => {
         gender: false, // Gender is now a boolean
         phoneNumber: '',
         dateOfBirth: '',
+        avatar: '',
         address: '',
         mail: '',
         createAt: '',
@@ -27,11 +29,11 @@ const Profile = () => {
     useEffect(() => {
         const fetchFollowerCount = async () => {
             try {
-                const accessToken = localStorage.getItem('token'); // Lấy token từ localStorage
+                const accessToken = localStorage.getItem('token');
                 console.log("Token:", accessToken);
-                const response = await axios.get('http://localhost:8080/follows/followerCount', {
+                const response = await axios.get('http://localhost:8080/follow/followerCount', {
                     headers: {
-                        'Authorization': `Bearer ${accessToken}` // Thêm token vào tiêu đề 'Authorization'
+                        'Authorization': `Bearer ${accessToken}`
                     }
                 });
                 setFollowerCount(response.data);
@@ -42,11 +44,11 @@ const Profile = () => {
 
         const fetchFollowingCount = async () => {
             try {
-                const accessToken = localStorage.getItem('token'); // Lấy token từ localStorage
+                const accessToken = localStorage.getItem('token');
                 console.log("Token:", accessToken);
-                const response = await axios.get('http://localhost:8080/follows/followingCount', {
+                const response = await axios.get('http://localhost:8080/follow/followingCount', {
                     headers: {
-                        'Authorization': `Bearer ${accessToken}` // Thêm token vào tiêu đề 'Authorization'
+                        'Authorization': `Bearer ${accessToken}`
                     }
                 });
                 setFollowingCount(response.data);
@@ -68,13 +70,13 @@ const Profile = () => {
 
             if (!accessToken) {
                 console.error('Access token not found');
-
                 return;
             }
 
             try {
                 const userData = await userService.getUserDetails(accessToken);
                 setUserInfo(userData);
+                setUrlAvatar(userData.avatar.startsWith("http") ? userData.avatar : `http://localhost:9000/${userData.avatar}`);
             } catch (error) {
                 setError(error);
             }
@@ -103,8 +105,8 @@ const Profile = () => {
                     </div>
                     <div className="flex justify-center px-5  -mt-12">
                         <img
-                            className="h-40 w-40 bg-white p-2 rounded-full"
-                            src={userInfo && userInfo.avatar !== null ? userInfo.avatar : "placeholder.jpg"}
+                            className="h-40 w-40 bg-white p-2 rounded-full object-cover"
+                            src={urlAvatar}
                             alt="avatar"
                         />
                     </div>
@@ -222,7 +224,7 @@ const Profile = () => {
 
             <div className="mx-auto bg-gray-100">
                 <div class="gap-5 w-4/5 mx-auto flex flex-col md:flex-row">
-                    <div class="mt-8 justify-center w-[30%] mx-auto hidden md:block">
+                    <div class="mt-8 justify-center w-[30%] mx-auto hidden lg:block">
                         <div>
                             <LeftSideProfilePic></LeftSideProfilePic>
                         </div>
@@ -230,7 +232,7 @@ const Profile = () => {
                             <Follows></Follows>
                         </div>
                     </div>
-                    <div class="w-full md:w-[70%] mx-auto justify-center mt-8 md:pl-0 md:pr-8">
+                    <div class="w-full lg:w-[70%] mx-auto justify-center mt-8 md:pl-0 md:pr-8">
                         <PostCard></PostCard>
                         <PostCard></PostCard>
                     </div>

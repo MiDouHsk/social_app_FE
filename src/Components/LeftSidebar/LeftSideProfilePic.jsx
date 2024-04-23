@@ -18,7 +18,7 @@ const LeftSideProfilePic = () => {
                                     <img
                                         src={card.image}
                                         alt={`Picture ${card.id}`}
-                                        className="w-28 h-28 object-cover"
+                                        className="w-28 h-28 object-fit object-fill object-contain object-cover object-none"
                                     />
                                 </div>
                             );

@@ -18,10 +18,11 @@ const Pages = () => {
 
         if (token) {
             setIsLoggedIn(true);
-        } else {
-            setIsLoggedIn(false);
-            navigate("/login");
         }
+//         else {
+//             setIsLoggedIn(false);
+//             navigate("/login");
+//         }
     }, [navigate]);
 
     return (
@@ -30,14 +31,14 @@ const Pages = () => {
                 {isLoggedIn && (
                     <>
                         <Route path="/home" element={<Home />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/reset" element={<Reset />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/friend" element={<Friends />} />
                         <Route path="/video" element={<VideoShow />} />
                         <Route path="/picture" element={<Picture />} />
                     </>
                 )}
+                <Route path="/reset" element={<Reset />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
             </Routes>
         </div>

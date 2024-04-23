@@ -9,7 +9,7 @@ const CardListFollowing = () => {
         const fetchFollowingList = async () => {
             try {
                 const accessToken = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8080/follows/ListUsers/following', {
+                const response = await axios.get('http://localhost:8080/follow/ListUsers/following', {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
@@ -22,7 +22,7 @@ const CardListFollowing = () => {
         fetchFollowingList();
     }, []);
 
-    const handleUnfollow = async (userId) => {
+    const handleUnfollow = async (id) => {
         try {
             const accessToken = localStorage.getItem('token');
             console.log('accessToken:', accessToken);
@@ -31,21 +31,16 @@ const CardListFollowing = () => {
                 return;
             }
 
-            console.log('userId:', userId);
-            if (!userId) {
-                console.error('User ID is missing.');
-                return;
-            }
 
             // Tiếp tục gửi yêu cầu unfollow với token và userId đã được xác thực
-            await axios.delete(`http://localhost:8080/follows/unfollow/${userId}`, {
+            await axios.delete(`http://localhost:8080/follow/unfollow/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             });
 
             // Sau khi unfollow thành công, cập nhật lại danh sách người theo dõi
-            const updatedList = followingList.filter(follower => follower.id !== userId);
+            const updatedList = followingList.filter(follower => follower.id !== id);
             setFollowingList(updatedList);
         } catch (error) {
             console.error('Error unfollowing user:', error);

@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:3000';
 const userService = {
     getUserDetails: async (accessToken) => {
         try {
-            const response = await axios.get(`${BASE_URL}/user/details`, {
+            const response = await axios.get(`${BASE_URL}/user/profile`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

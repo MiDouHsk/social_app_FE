@@ -9,7 +9,7 @@ const CardListFollower = () => {
         const fetchFollowingList = async () => {
             try {
                 const accessToken = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8080/follows/ListUsers/follower', {
+                const response = await axios.get('http://localhost:8080/follow/ListUsers/follower', {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
@@ -27,7 +27,7 @@ const CardListFollower = () => {
         const unFollow = async () => {
             try {
                 const accessToken = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8080/follows//unfollow/{followingUserId}', {
+                const response = await axios.get('http://localhost:8080/follow//unfollow/{followingUserId}', {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }

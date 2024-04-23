@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import avatar from '../../assets/imgs/IMG_0482.PNG';
 
 const UserLinks = ({ name, avatar }) => {
+const avatarUrl = avatar.startsWith("http") ? avatar : `http://localhost:9000/${avatar}`;
 
     return (
         <div className="flex justify-center items-center cursor-pointer">
@@ -39,7 +39,7 @@ const UserLinks = ({ name, avatar }) => {
             </div>
             <div className="flex flex-col pl-2">
                 <Link to="/profile" className="flex items-center">
-                    <img className="w-8 h-8 rounded-full mx-4" src={avatar} alt="avatar" />
+                    <img className="w-8 h-8 rounded-full mx-4 object-cover" src={avatarUrl} alt="avatar" />
                     <div className="font-medium dark:text-gray-900">
                         {name}
                     </div>

@@ -1,7 +1,14 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 const Register = () => {
+    const navigate = useNavigate();
+
+    const handleLoginClick = () => {
+            navigate('/login');
+        }
+
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -14,7 +21,7 @@ const Register = () => {
         dateOfBirth: { day: '', month: '', year: '' }
     });
 
-    const [error, setError] = useState(null); // Define setError function here
+    const [error, setError] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,7 +53,7 @@ const Register = () => {
         try {
             const response = await axios.post('http://localhost:8080/user/auth/register', updatedFormData);
             console.log(response.data);
-            window.location.href = '/login';
+            navigate('/login');
         } catch (error) {
             console.error('Error during registration:', error);
             if (error.response) {
@@ -144,8 +151,9 @@ const Register = () => {
                         Register
                     </button>
                 </div>
-                <div className="text-sm font-medium text-gray-500 dark:text-gray-300 mt-4">Already have an account? 
-                    <a href="/login" className="text-blue-700 hover:underline dark:text-blue-500"> Login account</a>
+                <div className="text-sm font-medium text-gray-500 dark:text-gray-300 mt-4">
+                    Already have an account?
+                    <Link to="/login" className="text-blue-700 hover:underline dark:text-blue-500"> Login account </Link>
                 </div>
             </form>
         </div>

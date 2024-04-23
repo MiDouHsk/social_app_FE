@@ -12,27 +12,18 @@ const Main = () => {
     const [status, setStatus] = useState("");
     const [error, setError] = useState("");
     const [postStatus, setPostStatus] = useState("");
-    const [avatar, setAvatar] = useState(""); // Thêm state để lưu trữ avatar của người tạo bài post
-    const [userId, setUserId] = useState(""); // Thêm state để lưu trữ userId của người tạo bài post
+    const [userInfo, setUserInfo] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/posts/create', {
-                title: title,
-                body: body,
-                status: status
-            });
+           const response = await axios.post('http://localhost:8080/posts/create', {
+               title: title,
+               body: body,
+               status: status
+           });
 
-            // Xử lý phản hồi thành công
-            console.log("Post created:", response.data);
-
-            // Lấy thông tin người tạo bài post từ response
-            const { avatar, userId } = response.data;
-
-            // Cập nhật state với thông tin người tạo bài post
-            setAvatar(avatar);
-            setUserId(userId);
+           setUserInfo(response);
 
             // Reset form fields
             setTitle("");
@@ -40,15 +31,14 @@ const Main = () => {
             setStatus("");
             setError("");
 
-            // Cập nhật trạng thái của bài viết
             setPostStatus("Post successfully created!");
-            setError(""); // Xóa thông báo lỗi nếu có
+            setError("");
 
         } catch (error) {
             console.error('Error:', error);
             // Xử lý lỗi
             setError("Failed to create post. Please try again later.");
-            setPostStatus(""); // Xóa thông báo trạng thái nếu có
+            setPostStatus("");
         }
     };
 
@@ -57,12 +47,11 @@ const Main = () => {
             <div className="flex flex-col py-2 w-full bg-white rounded-3xl shadow-lg">
                 <div className="flex items-center border-b-2 border-gray-300 pb-2 pl-4 w-full">
                     <img className="w-10 h-10 rounded-full"
-                        src={avatar}
+//                         src={userInfo.avatar}
                         alt="avatar" />
                     <form onSubmit={handleSubmit} className="w-full">
                         <div className="flex justify-between items-center">
                             <div className="w-full ml-4">
-                                {/* Thêm trường input để nhập tiêu đề */}
                                 <input
                                     type="text"
                                     name="title"
@@ -114,7 +103,7 @@ const Main = () => {
             <div className="flex flex-col py-4 w-full">{/* posts */}</div>
             <div>
                 {/* Truyền thông tin người tạo bài post xuống PostCard component */}
-                <PostCard avatar={avatar} userId={userId}></PostCard>
+                <PostCard ></PostCard>
             </div>
         </div>
     );

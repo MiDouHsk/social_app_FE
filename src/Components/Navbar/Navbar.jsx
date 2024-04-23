@@ -4,7 +4,7 @@ import NavLinks from "./NavLinks";
 import UserLinks from "./UserLinks";
 import userService from '../serivce/userService';
 
-const Navbar = ({ name, img }) => {
+const Navbar = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [error, setError] = useState(null);
     const [formData, setFormData] = useState({
@@ -48,10 +48,10 @@ const Navbar = ({ name, img }) => {
                 App
             </div>
             <div className="flex justify-center items-center mx-auto">
-                <NavLinks></NavLinks>
+                <NavLinks />
             </div>
             <div className="flex justify-center items-center">
-                <UserLinks name={userInfo && userInfo.username} img={userInfo && userInfo.avatar} />
+                {userInfo && <UserLinks name={userInfo.username} avatar={userInfo.avatar} />}
             </div>
         </div>
     );
