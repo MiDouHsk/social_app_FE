@@ -45,13 +45,12 @@ const Navbar = () => {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r to-red-600 from-blue-400">
                     Social Media
                 </span>{" "}
-                App
             </div>
             <div className="flex justify-center items-center mx-auto">
                 <NavLinks />
             </div>
             <div className="flex justify-center items-center">
-                {userInfo && userInfo.avatar && userInfo.username && (
+                {userInfo && userInfo.username && (
                     <UserLinks name={userInfo.username} avatar={userInfo.avatar} />
                 )}
             </div>

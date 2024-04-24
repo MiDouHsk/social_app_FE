@@ -19,7 +19,7 @@ const Card = ({ name, img, status }) => {
                     {status}
                 </p>
             </div>
-        </div >
+        </div>
     );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import '../../App.css';
 
 const PostCard = ({ reloadPosts }) => {
     const [posts, setPosts] = useState([]);
@@ -76,16 +77,18 @@ const PostCard = ({ reloadPosts }) => {
                             <p className="ml-4 pb-4 font-roboto font-medium text-sm text-gray-700 no-underline tracking-normal leading-none">
                                 {post.body}
                             </p>
-                            <div>
-                                {post.medias.length > 0 && (
-                                    post.medias[0].publicUrl.endsWith('.mp4') ? (
-                                        <video className="w-full rounded-xl max-h-800" controls>
-                                            <source src={`http://localhost:9000/${post.medias[0].publicUrl}`} type="video/mp4" />
-                                        </video>
-                                    ) : (
-                                        <img className="w-full h-full rounded-xl max-h-800" src={`http://localhost:9000/${post.medias[0].publicUrl}`} alt="postImage" />
-                                    )
-                                )}
+                            <div className="post-media-grid">
+                                {post.medias.map((media, index) => (
+                                    <div key={index} className={`post-media-item ${media.publicUrl.endsWith('.mp4') ? 'video' : 'image'}`}>
+                                        {media.publicUrl.endsWith('.mp4') ? (
+                                            <video className="w-full h-full rounded-xl" controls>
+                                                <source src={`http://localhost:9000/${media.publicUrl}`} type="video/mp4" />
+                                            </video>
+                                        ) : (
+                                            <img className="w-full h-full rounded-xl" src={`http://localhost:9000/${media.publicUrl}`} alt="postImage" />
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         <div className="flex justify-around items-center pt-4">

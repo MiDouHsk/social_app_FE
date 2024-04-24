@@ -8,6 +8,7 @@ import Profile from "./Profile";
 import Friends from "./Friends";
 import VideoShow from "./VideoShow";
 import Picture from "./Picture";
+import PostForm from './PostForm';
 
 const Pages = () => {
     const navigate = useNavigate();
@@ -31,6 +32,7 @@ const Pages = () => {
                 {isLoggedIn && (
                     <>
                         <Route path="/home" element={<Home />} />
+                        <Route path="/form" element={<PostForm />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/friend" element={<Friends />} />
                         <Route path="/video" element={<VideoShow />} />
