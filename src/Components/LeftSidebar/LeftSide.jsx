@@ -11,7 +11,6 @@ const LeftSide = () => {
     const [error, setError] = useState(null);
     const [followerCount, setFollowerCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);
-    const [avatarUrl, setAvatarUrl] = useState(' ');
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -70,8 +69,8 @@ const LeftSide = () => {
             try {
                 const userData = await userService.getUserDetails(accessToken);
                 setUserInfo(userData);
-                const avatarUrl = userData.avatar.startsWith("http") ? userData.avatar : `http://localhost:9000/${userData.avatar}`;
-                setAvatarUrl(avatarUrl);
+                {/*const avatarUrl = userData.avatar.startsWith("http") ? userData.avatar : `http://localhost:9000/${userData.avatar}`;
+                setAvatarUrl(avatarUrl);*/}
             } catch (error) {
                 setError(error);
             }
@@ -105,13 +104,11 @@ const LeftSide = () => {
                     <div className="absolute inset-0 bg-black opacity-25"></div>
                 </div>
                 <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-                    {/* <img
-                        className="h-24 w-24 rounded-full object-cover"
-                        src={avatarUrl instanceof Error ? null : avatarUrl || "default-avatar-url"}
+                    <img
+                        className="h-24 w-24 bg-white rounded-full object-cover"
+                        src={`http://localhost:9000/${userInfo.avatar}`}
                         alt="avatar"
-                        onError={() => setAvatarUrl(null)}
-                        style={{ backgroundColor: avatarUrl ? "" : "brown" }}
-                    /> */}
+                    /> 
                     <div className="absolute inset-0 opacity-25"></div>
                 </div>
             </div>

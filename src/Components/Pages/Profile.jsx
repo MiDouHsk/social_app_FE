@@ -12,7 +12,6 @@ const Profile = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [error, setError] = useState(null);
     const [followerCount, setFollowerCount] = useState(0);
-    const [urlAvatar, setUrlAvatar] = useState(' ');
     const [followingCount, setFollowingCount] = useState(0);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -20,7 +19,6 @@ const Profile = () => {
         gender: false, // Gender is now a boolean
         phoneNumber: '',
         dateOfBirth: '',
-        avatar: '',
         address: '',
         mail: '',
         createAt: '',
@@ -29,7 +27,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchFollowerCount = async () => {
             try {
-                const accessToken = localStorage.getItem('token');
+                const accessToken = localStorage.getItem('token'); 
                 console.log("Token:", accessToken);
                 const response = await axios.get('http://localhost:8080/follow/followerCount', {
                     headers: {
@@ -48,7 +46,7 @@ const Profile = () => {
                 console.log("Token:", accessToken);
                 const response = await axios.get('http://localhost:8080/follow/followingCount', {
                     headers: {
-                        'Authorization': `Bearer ${accessToken}`
+                        'Authorization': `Bearer ${accessToken}` 
                     }
                 });
                 setFollowingCount(response.data);
@@ -70,13 +68,13 @@ const Profile = () => {
 
             if (!accessToken) {
                 console.error('Access token not found');
+
                 return;
             }
 
-            try {
+           try {
                 const userData = await userService.getUserDetails(accessToken);
                 setUserInfo(userData);
-                setUrlAvatar(userData.avatar.startsWith("http") ? userData.avatar : `http://localhost:9000/${userData.avatar}`);
             } catch (error) {
                 setError(error);
             }
@@ -104,13 +102,12 @@ const Profile = () => {
                         <img className="w-full" src={background} alt="background" />
                     </div>
                     <div className="flex justify-center px-5  -mt-12">
-                        {/* <img
+                        <img
                             className="h-40 w-40 bg-white p-2 rounded-full object-cover"
-                            src={urlAvatar instanceof Error ? null : urlAvatar || "default-avatar-url"}
+                            src={`http://localhost:9000/${userInfo.avatar}`}
                             alt="avatar"
-                            onError={() => setUrlAvatar(null)}
-                            style={{ backgroundColor: urlAvatar ? "" : "brown" }}
-                        /> */}
+                        />
+
                     </div>
                     <div className=" ">
                         <div className="text-center px-14">
@@ -181,26 +178,36 @@ const Profile = () => {
                                     <dt className="text-sm font-medium text-gray-500  cursor-pointer">
                                         menu
                                     </dt>
+                                    <dd className="">
+                                    </dd>
                                 </div>
                                 <div className=" cursor-pointer">
                                     <dt className="text-sm font-medium text-gray-500">
                                         All picture
                                     </dt>
+                                    <dd className="">
+                                    </dd>
                                 </div>
                                 <div className=" cursor-pointer">
                                     <dt className="text-sm font-medium text-gray-500">
                                         All posts
                                     </dt>
+                                    <dd className="">
+                                    </dd>
                                 </div>
                                 <div className=" cursor-pointer">
                                     <dt className="text-sm font-medium text-gray-500">
                                         updateProfile
                                     </dt>
+                                    <dd className="">
+                                    </dd>
                                 </div>
                                 <div className=" cursor-pointer">
                                     <dt className="text-sm font-medium text-gray-500">
                                         SignOut
                                     </dt>
+                                    <dd className="">
+                                    </dd>
                                 </div>
                             </div>
                         </dl>
@@ -211,7 +218,7 @@ const Profile = () => {
 
             <div className="mx-auto bg-gray-100">
                 <div class="gap-5 w-4/5 mx-auto flex flex-col md:flex-row">
-                    <div class="mt-8 justify-center w-[30%] mx-auto hidden lg:block">
+                    <div class="mt-8 justify-center w-[30%] mx-auto hidden md:block">
                         <div>
                             <LeftSideProfilePic></LeftSideProfilePic>
                         </div>
@@ -219,7 +226,7 @@ const Profile = () => {
                             <Follows></Follows>
                         </div>
                     </div>
-                    <div class="w-full lg:w-[70%] mx-auto justify-center mt-8 md:pl-0 md:pr-8">
+                    <div class="w-full md:w-[70%] mx-auto justify-center mt-8 md:pl-0 md:pr-8">
                         <PostCard></PostCard>
                     </div>
                 </div>

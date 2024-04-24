@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { Link } from "react-router-dom";
 
 const UserLinks = ({ name, avatar }) => {
-    const avatarUrl = avatar.startsWith("http") ? avatar : `http://localhost:9000/${avatar}`;
+    
 
     return (
         <div className="flex justify-center items-center cursor-pointer">
@@ -38,12 +38,11 @@ const UserLinks = ({ name, avatar }) => {
             </div>
             <div className="flex flex-col pl-2">
                 <Link to="/profile" className="flex items-center">
-                    {/* <img
+                    <img
                         className="w-8 h-8 rounded-full mx-4 object-cover"
-                        src={typeof avatarUrl === 'string' ? avatarUrl : null}
+                        src={`http://localhost:9000/${avatar}`}
                         alt="avatar"
-                        style={{ backgroundColor: avatarUrl ? "" : "brown" }}
-                    /> */}
+                    />
                     <div className="font-medium dark:text-gray-900">
                         {name}
                     </div>

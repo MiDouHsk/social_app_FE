@@ -18,31 +18,28 @@ const Main = () => {
     const [reloadPosts, setReloadPosts] = useState(false);
     const [showNotification, setShowNotification] = useState(false);
     const [submitClicked, setSubmitClicked] = useState(false);
+    const [selectedFile, setSelectedFile] = useState("");
+    const [mediaIds, setMediaIds] = useState([]);
+
 
     useEffect(() => {
-        const notificationTimeout = setTimeout(() => {
-            setShowNotification(false);
-            setSubmitClicked(false);
-        }, 5000);
-
-        return () => clearTimeout(notificationTimeout);
-    }, [showNotification]);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            axios.get('http://localhost:8080/user/profile', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+        const fetchData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    const response = await axios.get('http://localhost:8080/user/profile', {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    setUserInfo(response.data);
                 }
-            })
-                .then(response => {
-                    setUserInfo(response.data.user);
-                })
-                .catch(error => {
-                    console.error('Error fetching user info:', error);
-                });
-        }
+            } catch (error) {
+                setError(error.response.data);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const handleSubmit = async (e) => {
@@ -56,17 +53,25 @@ const Main = () => {
         }
 
         try {
+            let mediaId = null;
+            const selectedFile = e.target.files && e.target.files.length > 0 ? e.target.files[0] : null;
+            if (selectedFile) {
+                mediaId = await handleImageChange();
+            }
+
+
             // Create post with image URL
             const postResponse = await axios.post('http://localhost:8080/posts/create', {
                 title: title,
                 body: body,
                 status: status,
-                imageUrl: imagePreview
+                mediasId: mediaId ? [mediaId] : null
             }, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
+            console.log(postResponse.data);
 
             // Reset form fields
             setTitle("");
@@ -81,10 +86,6 @@ const Main = () => {
             // Hiện thông báo
             setShowNotification(true);
 
-            // Tự động ẩn thông báo sau 5 giây
-            setTimeout(() => {
-                setShowNotification(false);
-            }, 5000);
         } catch (error) {
             console.error('Error:', error);
             setError("Failed to create post. Please try again later.");
@@ -99,35 +100,45 @@ const Main = () => {
             formData.append('file', selectedImage);
             const token = localStorage.getItem('token');
 
-            const response = await axios.post('http://localhost:8080/posts/upload', formData, {
+            const response = await axios.post('http://localhost:8080/posts/upload/Media', formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
                 }
             });
+            setSelectedFile(response.data);
+            const mediaId = response.data;
+            console.log('File uploaded successfully:', mediaId);
 
-            // Get the public URL of the uploaded image
-            const imageUrl = response.data.publicUrl;
-            setImagePreview(imageUrl); // Lưu trữ URL của ảnh xem trước để hiển thị
+            setMediaIds([...mediaIds, mediaId]);
+
+            return mediaId;
         } catch (error) {
-            console.error('Error:', error);
-            // Handle error
+            console.error('Error uploading file:', error);
             setError("Failed to upload image. Please try again later.");
         }
     };
 
+
+    useEffect(() => {
+        console.log(selectedFile);
+    }, [selectedFile]);
+
     return (
         <div className="flex flex-col items-center">
-            <div className="flex flex-col py-2 w-full bg-white rounded-3xl shadow-lg">
-                <div className="flex items-center border-b-2 border-gray-300 pb-2 pl-4 w-full">
-                    {userInfo && userInfo.avatar ? (
-                        <img className="w-10 h-10 rounded-full" src={userInfo.avatar} alt="avatar" />
-                    ) : (
-                        <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+            <div className=" flex-col py-2 w-full bg-white rounded-3xl shadow-lg">
+                <div className="flex items-center  pb-2 pl-4 w-full justify-between px-3">
+                    {userInfo && userInfo.avatar && (
+                        <img
+                            className="h-12 w-12 rounded-full object-cover"
+                            src={`http://localhost:9000/${userInfo.avatar}`}
+                            alt="avatar"
+                        />
                     )}
                     <form onSubmit={handleSubmit} className="w-full">
                         <div className="flex justify-between items-center">
-                            <div className="w-full ml-4">
+                            <div className="w-full ml-4 mr-4">
+                                {/*
                                 <input
                                     type="text"
                                     name="title"
@@ -135,19 +146,16 @@ const Main = () => {
                                     onChange={(e) => setTitle(e.target.value)}
                                     placeholder="Enter title"
                                     className="outline-none w-full bg-white rounded-md" />
+                                */}
                                 <textarea
                                     type="text"
                                     name="text"
                                     value={body}
                                     onChange={(e) => setBody(e.target.value)}
                                     placeholder="What's on your mind, User"
-                                    className="outline-none w-full bg-white rounded-md mt-2" />
+                                    className="w-full rounded-xl h-10 bg-gray-200 px-5" />
                             </div>
-                            <div className="mx-4">
-                                {imagePreview && (
-                                    <img className="h-24 object-cover" src={imagePreview} alt="preview" />
-                                )}
-                            </div>
+                            
                             <div className="mr-4">
                                 <button className="font-bold text-blue-600" variant="text" type="submit">
                                     Share
@@ -155,6 +163,26 @@ const Main = () => {
                             </div>
                         </div>
                     </form>
+                </div>
+                <div>
+                    {/*{postResponse.data && postResponse.data.medias && (
+                        <div className="flex items-center justify-center w-full h-full">
+                            <div className="w-full p-4 flex items-center justify-center">
+                                {postResponse.data.medias.map(media => (
+                                    <img key={media.publicUrl} className="w-auto h-52 object-cover" src={media.publicUrl} alt="preview" />
+                                ))}
+                            </div>
+                        </div>
+                    )}*/}
+                </div>
+                <div>
+                    {selectedFile && ( // Hiển thị URL của hình ảnh nếu có
+                        <div className="flex items-center justify-center w-full h-full">
+                            <div className="w-full p-4 flex items-center justify-center">
+                                <p>{selectedFile}</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className="flex justify-around items-center pt-4">
                     <div className="flex items-center hover:bg-gray-100 rounded-xl">

@@ -3,3 +3,22 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.post-media-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.post-media-item {
+    flex: 1 0 50%;
+    max-width: 50%;
+}
+
+@media (max-width: 768px) {
+    .post-media-item {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+}
+
+
