@@ -1,0 +1,9 @@
+/* Chặn cuộn phần nền */
+.bg-black {
+    overflow: hidden;
+}
+
+/* Cố định kích thước cửa sổ */
+.fixed {
+    position: fixed;
+}

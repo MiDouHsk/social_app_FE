@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import NavLinks from "./NavLinks";
 import UserLinks from "./UserLinks";
-import userService from '../serivce/userService';
+import userService from '../service/userService';
 
 const Navbar = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -21,7 +21,7 @@ const Navbar = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             const accessToken = localStorage.getItem('token');
-            console.log("Token:", accessToken);
+            // console.log("Token:", accessToken);
 
             if (!accessToken) {
                 console.error('Access token not found');
@@ -51,7 +51,7 @@ const Navbar = () => {
             </div>
             <div className="flex justify-center items-center">
                 {userInfo && userInfo.username && (
-                    <UserLinks name={userInfo.username} avatar={userInfo.avatar} />
+                    <UserLinks name={userInfo.username} avatar={userInfo.avatar} id={userInfo.id} />
                 )}
             </div>
         </div>

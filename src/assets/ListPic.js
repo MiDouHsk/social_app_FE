@@ -7,12 +7,6 @@ import pic6 from "../assets/ListPic/IMG_0006.JPG";
 import pic7 from "../assets/ListPic/IMG_0009.JPG";
 import pic8 from "../assets/ListPic/IMG_0008.JPG";
 import pic9 from "../assets/ListPic/IMG_0014.JPG";
-import pic10 from "../assets/ListPic/IMG_0016.JPG";
-import pic11 from "../assets/ListPic/IMG_0017.JPG";
-import pic12 from "../assets/ListPic/IMG_0021.JPG";
-import pic13 from "../assets/ListPic/IMG_0018.JPG";
-import pic14 from "../assets/ListPic/IMG_0020.JPG";
-import pic15 from "../assets/ListPic/IMG_0019.JPG";
 
 export const ListPic = [
     {

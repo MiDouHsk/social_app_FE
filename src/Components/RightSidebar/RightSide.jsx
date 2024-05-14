@@ -1,66 +1,98 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Url, avatarBaseUrl } from '../service/constants';
+import { Link } from 'react-router-dom';
 
 const RightSide = () => {
     const [followingList, setFollowingList] = useState([]);
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
-        const fetchFollowingList = async () => {
-            try {
-                const accessToken = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8080/follows/ListUsers/following', {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
-                setFollowingList(response.data);
-            } catch (error) {
-                console.error('Error fetching following list:', error);
-            }
-        };
         fetchFollowingList();
-    }, []);
+    }, [page]);
+
+    const fetchFollowingList = async () => {
+        try {
+            const accessToken = localStorage.getItem('token');
+            const response = await axios.get(`${Url}follow/ListUsers/notFollowing?page=${page}&pageSize=7&sortName=createAt&sortType=DESC`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            setFollowingList(response.data);
+        } catch (error) {
+            console.error('Error fetching following list:', error);
+        }
+    };
+
+    const followUser = async (followingUserId) => {
+        try {
+            const accessToken = localStorage.getItem('token');
+            await axios.post(`${Url}follow/user/${followingUserId}`, null, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            fetchFollowingList();
+        } catch (error) {
+            console.error('Error following user:', error);
+        }
+    };
+
+    const handleUsernameClick = (userId) => {
+        // console.log(`Clicked user with ID: ${userId}`);
+    };
 
     return (
-        <div className="flex flex-col h-screen bg-white shadow-lg border-2 rounded-l-xl w-full">
-            <div className="mx-2 my-2">
-                <form className="max-w-md mx-auto">
-                    <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                            </svg>
-                        </div>
-                        <input type="search" id="default-search" className="block w-full p-4 pl-10 text-sm text-black border border-gray-300 rounded-lg bg-gray-50" placeholder="Search... " required />
-                        <button type="submit" className="text-black absolute right-2.5 bottom-2.5 hover:text-white  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">Search</button>
-                    </div>
-                </form>
-            </div>
+        <div className="flex flex-col bg-white rounded-b-xl w-full overflow-y-auto max-h-[calc(100vh - 10rem)]">
             <div className="mx-5 text">
-                <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
-                    {followingList.map((follower) => (
-                        <li key={follower.id} className="pb-3 sm:pb-4">
-                            <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                                <div className="flex-shrink-0">
-                                    <img className="w-8 h-8 rounded-full object-cover" src={follower.avatar} alt={follower.username} />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-400">
-                                        {follower.username}
-                                    </p>
-                                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                        {follower.mail}
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-
-                </ul>
+                <div className="text my-2 text-blue-600 font-sm">
+                    Những người có thể bạn biết!
+                </div>
+                <div className="max-w-md">
+                    <table className="w-full">
+                        <tbody className="text-sm divide-y divide-gray-100">
+                            {followingList.map((follower) => (
+                                <tr key={follower.id} className="py-3 sm:py-4">
+                                    <Link to={`/friendProfile/${follower.id}`} className="cursor-pointer" onClick={() => handleUsernameClick(follower.id)}>
+                                        <td className="pr-4">
+                                            <div className="w-10 h-10 flex-shrink-0">
+                                                {follower.avatar ? (
+                                                    <img className="w-8 h-8 rounded-full object-cover" src={`${avatarBaseUrl}${follower.avatar}`} alt={follower.avatar} />
+                                                ) : (
+                                                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-4 h-4">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </td>
+                                        <td className="pr-4">
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-medium text-gray-900 truncate">
+                                                    {follower.firstName} {follower.lastName}
+                                                </p>
+                                                <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                                                    {/* {follower.mail} */}
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </Link>
+                                    <td>
+                                        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                            <button className="bg-green-200 hover:bg-green-600 text-white font-bold py-1 px-3 rounded focus:outline-none focus:ring focus:ring-green-300" onClick={() => followUser(follower.id)}>
+                                                Follow
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <p className="font-roboto font-normal text-sm text-gray-700 max-w-fit no-underline tracking-normal leading-tight py-2 mx-2">
-            </p>
+
         </div>
     );
 };

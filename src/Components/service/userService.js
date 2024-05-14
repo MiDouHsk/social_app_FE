@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { Url } from '../service/constants';
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = `${Url}`;
 
 const userService = {
     getUserDetails: async (accessToken) => {
         try {
-            const response = await axios.get(`${BASE_URL}/user/profile`, {
+            const response = await axios.get(`${BASE_URL}user/profile`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

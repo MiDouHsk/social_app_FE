@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-.post-media-grid {
+/* .post-media-grid {
     display: flex;
     flex-wrap: wrap;
 }
@@ -19,6 +19,4 @@
         flex-basis: 100%;
         max-width: 100%;
     }
-}
-
-
+} */

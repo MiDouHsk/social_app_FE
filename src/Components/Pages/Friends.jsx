@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar";
-import LeftSideFriend from "../LeftSidebar/LeftSideFriend";
 import Footer from "../Footer/Footer";
 import CardListFollower from "../Friends/CardListFollower";
 import CardListFollowing from "../Friends/CardListFollowing";
+import LeftSide from "../LeftSidebar/LeftSide";
 
 const Friends = () => {
-    // Sử dụng state để lưu trạng thái hiện tại của chức năng
-    const [currentFunction, setCurrentFunction] = useState("following"); // Mặc định là hiển thị chức năng bạn bè
+    const [currentFunction, setCurrentFunction] = useState("following");
+
+    const toggleFunction = () => {
+        setCurrentFunction(prevFunction => prevFunction === "following" ? "follower" : "following");
+    };
 
     return (
         <div className="w-full h-screen">
@@ -15,14 +18,17 @@ const Friends = () => {
                 <Navbar></Navbar>
             </div>
             <div className="flex bg-gray-900">
-                <div className="flex-auto w-[30%] fixed top-14 overflow-y-auto">
-                    <LeftSideFriend setCurrentFunction={setCurrentFunction}></LeftSideFriend>
+                <div className="flex-auto w-[25%] fixed hidden lg:block top-14">
+                    <LeftSide></LeftSide>
                 </div>
-                <div className="flex-auto w-[70%] absolute left-[30%] top-14 rounded-xl bg-gray-100">
+                <div className="flex-auto w-full absolute lg:w-[70%] lg:ml-[25%] lg:mt-14 bg-gray-100 rounded-xl">
                     <div className="w-[80%] mx-auto my-8">
-                        {/* Render các chức năng tương ứng dựa trên trạng thái hiện tại */}
-                        {currentFunction === "following" && <CardListFollowing></CardListFollowing>}
-                        {currentFunction === "follower" && <CardListFollower></CardListFollower>}
+                        <div className="flex justify-end mb-4 mr-12">
+                            <button onClick={toggleFunction} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
+                                {currentFunction === "following" ? "Followers" : "Following"}
+                            </button>
+                        </div>
+                        {currentFunction === "following" ? <CardListFollowing /> : <CardListFollower />}
                     </div>
                     <Footer></Footer>
                 </div>

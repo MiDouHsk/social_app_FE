@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Url, avatarBaseUrl } from "../service/constants";
 
-const LeftSideProfilePic = () => {
+const LeftSideProfilePic = ({ userId }) => {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
         const fetchPosts = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const response = await axios.get(`${Url}posts/userList`, {
+                const response = await axios.get(`${Url}posts/userList/${userId}`, {
                     params: {
                         page: 0,
                         pageSize: 10,
@@ -28,7 +28,7 @@ const LeftSideProfilePic = () => {
         };
 
         fetchPosts();
-    }, []);
+    }, [userId]);
 
     const isImage = (url) => {
         const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
@@ -40,7 +40,7 @@ const LeftSideProfilePic = () => {
         <div className="flex flex-col bg-white pb-4 border-2 rounded-xl shadow-lg mb-4">
             <div className="flex flex-col font-bold items-center pt-10 mb-10">
                 <p className="font-roboto font-medium text-md no-underline tracking-normal leading-none">
-                    User's Posts
+                    hình ảnh
                 </p>
             </div>
             <div className="flex flex-col mx-1">

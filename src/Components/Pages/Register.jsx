@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { Url } from '../service/constants';
 
 const Register = () => {
     const navigate = useNavigate();
-
-    const handleLoginClick = () => {
-            navigate('/login');
-        }
 
     const [formData, setFormData] = useState({
         username: '',
@@ -29,9 +26,9 @@ const Register = () => {
             ...prevState,
             [name]: value
         }));
-    };  
+    };
 
-    const handleSubmit = async (e) => { 
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const { day, month, year, gender, confirmPassword, ...rest } = formData;
         if (!day || !month || !year) {
@@ -49,113 +46,208 @@ const Register = () => {
             dateOfBirth: dateOfBirth.toISOString(),
             gender: isMale
         };
-        
+
         try {
-            const response = await axios.post('http://localhost:8080/user/auth/register', updatedFormData);
+            const response = await axios.post(`${Url}user/auth/register`, updatedFormData);
             console.log(response.data);
             navigate('/login');
         } catch (error) {
             console.error('Error during registration:', error);
             if (error.response) {
                 if (error.response.status === 400) {
-                    setError(error.response.data); // Set error state with server response
+                    setError(error.response.data);
                 } else {
-                    setError("An unexpected error occurred. Please try again later"); // Set generic error message
+                    setError("An unexpected error occurred. Please try again later");
                 }
             } else if (error.request) {
-                setError("Network error: Please check your internet connection"); // Set network error message
+                setError("Network error: Please check your internet connection");
             } else {
-                setError("An unexpected error occurred. Please try again later"); // Set generic error message
+                setError("An unexpected error occurred. Please try again later");
             }
         }
     };
 
     return (
-        <div className="mt-12 max-w-md mx-auto">
-            <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg shadow p-6 space-y-6 dark:bg-gray-800 dark:border-gray-700">
-                <div className="relative z-0 w-full mb-5 group">
-                    <input type="text" name="username" value={formData.username} onChange={handleChange} id="username" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                    <label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">User name</label>
-                </div>
-                <div className="relative z-0 w-full mb-5 group">
-                    <input type="email" name="mail" value={formData.mail} onChange={handleChange} id="floating_email" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                    <label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
-                </div>
-                <div className="relative z-0 w-full mb-5 group">
-                    <input type="password" name="password" value={formData.password} onChange={handleChange} id="floating_password" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                    <label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
-                </div>
-                <div className="relative z-0 w-full mb-5 group">
-                    <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} id="floating_repeat_password" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                    <label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirm password</label>
-                </div>
-                <div className="grid md:grid-cols-2 md:gap-6">
-                    <div className="relative z-0 w-full mb-5 group">
-                        <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} id="floating_first_name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                        <label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">First name</label>
+        <div className="container mx-auto">
+            <div className="flex justify-center px-6 my-12">
+                <div className="w-full xl:w-3/4 lg:w-11/12 flex">
+                    <img
+                        src="https://source.unsplash.com/Mv9hjnEUHR4/600x800"
+                        className="w-full h-auto bg-gray-400 hidden lg:block lg:w-5/12 bg-cover rounded-l-lg"
+                        alt=""
+                    />
+                    <div className="w-full lg:w-7/12 bg-white p-5 rounded-lg lg:rounded-l-none">
+                        <h3 className="pt-4 text-2xl text-center">Create an Account!</h3>
+                        <form onSubmit={handleSubmit} className="px-8 pt-6 pb-8 mb-4 bg-white rounded">
+                            <div className="mb-4 md:flex md:justify-between">
+                                <div className="mb-4 md:mr-2 md:mb-0">
+                                    <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="firstName">
+                                        First Name
+                                    </label>
+                                    <input
+                                        className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                        id="firstName"
+                                        type="text"
+                                        placeholder="First Name"
+                                        name="firstName"
+                                        value={formData.firstName}
+                                        onChange={handleChange}
+                                    // required
+                                    />
+                                </div>
+                                <div className="md:ml-2">
+                                    <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="lastName">
+                                        Last Name
+                                    </label>
+                                    <input
+                                        className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                        id="lastName"
+                                        type="text"
+                                        placeholder="Last Name"
+                                        name="lastName"
+                                        value={formData.lastName}
+                                        onChange={handleChange}
+                                    // required
+                                    />
+                                </div>
+                            </div>
+                            <div className="mb-4 md:flex md:justify-between">
+                                <div className="">
+                                    <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="email">
+                                        Email
+                                    </label>
+                                    <input
+                                        className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                        id="mail"
+                                        type="mail"
+                                        placeholder="Email"
+                                        name="mail"
+                                        value={formData.mail}
+                                        onChange={handleChange}
+                                    // required
+                                    />
+                                </div>
+                                <div className="">
+                                    <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="username">
+                                        Username
+                                    </label>
+                                    <input
+                                        className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                        id="username"
+                                        type="text"
+                                        placeholder="Username"
+                                        name="username"
+                                        value={formData.username}
+                                        onChange={handleChange}
+                                    // required
+                                    />
+                                </div>
+                            </div>
+                            <div className="mb-4">
+                                <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="phoneNumber">
+                                    Phone Number
+                                </label>
+                                <input
+                                    className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                    id="phoneNumber"
+                                    type="text"
+                                    placeholder="Phone Number"
+                                    name="phoneNumber"
+                                    value={formData.phoneNumber}
+                                    onChange={handleChange}
+                                // required
+                                />
+                            </div>
+                            <div className="mb-4 md:flex md:justify-between">
+                                <div className="mb-4 md:mr-2 md:mb-0">
+                                    <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="password">
+                                        Password
+                                    </label>
+                                    <input
+                                        className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                        id="password"
+                                        type="password"
+                                        placeholder="******************"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                    // required
+                                    />
+                                </div>
+                                <div className="md:ml-2">
+                                    <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="confirmPassword">
+                                        Confirm Password
+                                    </label>
+                                    <input
+                                        className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                        id="confirmPassword"
+                                        type="password"
+                                        placeholder="******************"
+                                        name="confirmPassword"
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                    // required
+                                    />
+                                </div>
+                            </div>
+                            <div className='mb-3'>
+                                <div className="day-month-year-container flex justify-between space-x-4 rounded-xl">
+                                    <div>
+                                        <select className="form-select w-24 rounded-xl text-center" name="day" value={formData.day} onChange={handleChange}>
+                                            <option value="">Day</option>
+                                            {[...Array(31)].map((_, index) => (
+                                                <option key={index + 1} value={index + 1}>{index + 1}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select className="form-select w-24 rounded-xl text-center" name="month" value={formData.month} onChange={handleChange}>
+                                            <option value="">Month</option>
+                                            {[...Array(12)].map((_, index) => (
+                                                <option key={index + 1} value={index + 1}>{index + 1}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select className="form-select w-24 rounded-xl text-center" name="year" value={formData.year} onChange={handleChange}>
+                                            <option value="">Year</option>
+                                            {[...Array(100)].map((_, index) => (
+                                                <option key={index + 1920} value={index + 1920}>{index + 1920}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            {error && <div className="text-red-500 text-sm mb-4 justify-center text-center">{error}</div>}
+                            <div className="mb-6 text-center">
+                                <button
+                                    className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                                    type="submit"
+                                >
+                                    Register Account
+                                </button>
+                            </div>
+                            <hr className="mb-6 border-t" />
+                            <div className="text-center">
+                                <a
+                                    className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
+                                    href="/reset"
+                                >
+                                    Forgot Password?
+                                </a>
+                            </div>
+                            <div className="text-center">
+                                <Link
+                                    className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
+                                    to="/login"
+                                >
+                                    Already have an account? Login!
+                                </Link>
+                            </div>
+                        </form>
                     </div>
-                    <div className="relative z-0 w-full mb-5 group">
-                        <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} id="floating_last_name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                        <label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Last name</label>
-                    </div>
                 </div>
-
-                <div className="relative z-0 w-full mb-5 group">
-                    <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} id="floating_phone" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                    <label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone number (123-456-7890)</label>
-                </div>
-                <div className="grid md:grid-cols-2 md:gap-6">
-                    <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700" style={{ height: '35px', marginBottom:'20px', backgroundColor:'white'}}>
-                        <input id="bordered-radio-1" type="radio" value="male" name="gender" onChange={handleChange} className="w-4 h-3 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                        <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900">Male</label>
-                    </div>
-                    <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700" style={{ height: '35px', marginBottom:'20px', backgroundColor:'white'}}>
-                        <input id="bordered-radio-2" type="radio" value="female" name="gender" onChange={handleChange} className="w-4 h-3 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                        <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 ">Female</label>
-                    </div>
-                </div>
-                <div className='mb-3'>
-                    <div className="day-month-year-container flex justify-between space-x-4 rounded-xl">
-                        <div>
-                            <select className="form-select w-24 rounded-xl text-center" name="day" value={formData.day} onChange={handleChange}>
-                                <option value="">Day</option>
-                                {[...Array(31)].map((_, index) => (
-                                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <select className="form-select w-24 rounded-xl text-center" name="month" value={formData.month} onChange={handleChange}>
-                                <option value="">Month</option>
-                                {[...Array(12)].map((_, index) => (
-                                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <select className="form-select w-24 rounded-xl text-center" name="year" value={formData.year} onChange={handleChange}>
-                                <option value="">Year</option>
-                                {[...Array(100)].map((_, index) => (
-                                    <option key={index + 1920} value={index + 1920}>{index + 1920}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                {error && <div className="text-red-500 text-center">{error}</div>}
-                <div className="flex items-center justify-center">
-                    <button 
-                        type="submit" 
-                        className="w-full text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-20 py-3 text-center me-2 mb-2"
-                    >
-                        Register
-                    </button>
-                </div>
-                <div className="text-sm font-medium text-gray-500 dark:text-gray-300 mt-4">
-                    Already have an account?
-                    <Link to="/login" className="text-blue-700 hover:underline dark:text-blue-500"> Login account </Link>
-                </div>
-            </form>
+            </div>
         </div>
     );
 };
