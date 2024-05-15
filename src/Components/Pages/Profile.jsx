@@ -10,6 +10,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Url, avatarBaseUrl } from '../service/constants';
 import MainFavorites from '../Main/MainFavories';
 import '../css/videocss.css';
+import NavRepo from "../Navbar/NavRepo";
+import NavLogo from '../Navbar/NavLogo';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -36,6 +38,20 @@ const Profile = () => {
     });
 
     const accessToken = localStorage.getItem("token");
+
+    const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1024);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLargeScreen(window.innerWidth > 1024);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -291,9 +307,20 @@ const Profile = () => {
 
     return (
         <div className="w-full bg-gray-100">
-            <div className="fixed z-10 w-full bg-white">
-                <Navbar />
-            </div>
+            {isLargeScreen ? (
+                <div className="fixed top-0 z-10 w-full bg-white">
+                    <Navbar />
+                </div>
+            ) : (
+                <div className="fixed bottom-0 z-10 w-full bg-white h-16 shadow-lg">
+                    <NavRepo />
+                </div>
+            )}
+            {!isLargeScreen && (
+                <div className="fixed top-0 z-10 w-full bg-white h-12 shadow-lg">
+                    <NavLogo />
+                </div>
+            )}
             <div className="flex mb-6 flex-wrap items-center  justify-center bg-gray-100">
                 <div className="container   bg-white  shadow-lg    transform   duration-200 easy-in-out">
                     <div className=" h-80 overflow-hidden">
@@ -312,7 +339,7 @@ const Profile = () => {
                             ) : (
                                 <img
                                     className="w-full object-cover"
-                                    src={userInfo.background ? `${avatarBaseUrl}${userInfo.background}` : defaultBackground}
+                                    src={userInfo.background ? `${avatarBaseUrl}${userInfo.background}` : " "}
                                     alt="background"
                                     onClick={handleClick}
                                     style={{ cursor: "pointer" }}
@@ -514,7 +541,7 @@ const Profile = () => {
             </div>
             <div className="mx-auto bg-gray-100">
                 <div class="gap-5 w-4/5 mx-auto flex flex-col md:flex-row">
-                    <div className="mt-8 justify-center w-[40%] mx-auto hidden md:block">
+                    <div className="mt-8 justify-center">
 
                         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
                             <div className="sm:divide-y sm:divide-gray-200 bg-white rounded-xl shadow-lg">
@@ -576,12 +603,12 @@ const Profile = () => {
                             <Follows></Follows>
                         </div>
                     </div>
-                    <div className="w-full lg:w-[60%] mx-auto justify-center mt-8 md:pl-0 md:pr-8">
+                    <div className="w-full lg:w-[60%] mx-auto justify-center mt-8 md:pl-0">
                         <div className="justify-center items-center">
                             {showFavorites ? (
                                 <MainFavorites avatar={userInfo.avatar} />
                             ) : (
-                                <MainYourProfile avatar={userInfo.avatar} />
+                                <MainYourProfile avatar={userInfo.avatar} id={userInfo.id} />
                             )}
 
                         </div>

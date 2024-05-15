@@ -91,6 +91,11 @@ const RightSide = () => {
                         </tbody>
                     </table>
                 </div>
+                <div class="mt-10 mb-5 flex justify-center">
+                    <p class="text-lg font-bold text-center p-4 bg-gray-100 rounded-lg">
+                        "Theo dõi thêm - để mở ra thế giới bài đăng đa dạng và phong phú!"
+                    </p>
+                </div>
             </div>
 
         </div>

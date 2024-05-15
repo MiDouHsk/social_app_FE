@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import moment from "moment";
 import { formatDistanceToNow } from 'date-fns';
 import '../../App.css';
 import { avatarBaseUrl, Url } from '../service/constants';
@@ -111,6 +110,40 @@ const PostCard = ({ reloadPosts, avatar }) => {
         }
     };
 
+    // -------------------------------------------- deleted comments --------------------------------------------------
+
+    const deleteComment = async (commentId) => {
+        try {
+            await axios.delete(`${Url}comments/delete/${commentId}`, {
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+            });
+
+            const updatedPost = { ...selectedPost };
+            updatedPost.comments = updatedPost.comments.filter(comment => comment.id !== commentId);
+            updatedPost.totalComments--;
+            setSelectedPost(updatedPost);
+
+            const updatedPosts = posts.map(post => {
+                if (post.id === selectedPost.id) {
+                    return updatedPost;
+                }
+                return post;
+            });
+
+            setPosts(updatedPosts);
+        } catch (error) {
+            console.error("Error deleting comment:", error);
+        }
+    };
+
+    const handleDeleteComment = (commentId) => {
+        if (window.confirm("bạn có thật sự muốn xóa comment này không?")) {
+            deleteComment(commentId);
+        }
+    };
+
     // favorites ------------------------------------------------------------------------------------------------------
 
     useEffect(() => {
@@ -201,15 +234,39 @@ const PostCard = ({ reloadPosts, avatar }) => {
 
             console.log("Like action successful:", response.data);
 
-            const updatedData = posts.map(data => {
-                if (data.id === objectId) {
-                    return {
-                        ...data,
-                        totalLike: data.totalLike + 1
-                    };
-                }
-                return data;
-            });
+            let updatedData;
+
+            if (objectType === 'Posts') {
+                updatedData = posts.map(data => {
+                    if (data.id === objectId) {
+                        return {
+                            ...data,
+                            totalLike: data.totalLike + 1
+                        };
+                    }
+                    return data;
+                });
+            } else if (objectType === 'Comments') {
+                updatedData = posts.map(post => {
+                    if (post.comments && post.comments.length > 0) {
+                        const updatedComments = post.comments.map(comment => {
+                            if (comment.id === objectId) {
+                                return {
+                                    ...comment,
+                                    totalLike: comment.totalLike + 1
+                                };
+                            }
+                            return comment;
+                        });
+                        return {
+                            ...post,
+                            comments: updatedComments
+                        };
+                    }
+                    return post;
+                });
+            }
+
             setPosts(updatedData);
         } catch (error) {
             console.error("Error when liking:", error);
@@ -297,26 +354,12 @@ const PostCard = ({ reloadPosts, avatar }) => {
             mediaQuery.removeListener(handleMediaChange);
         };
     }, []);
-
-    const openModal = () => {
-        setShowModal(true);
-    };
-
-    const closeModal = () => {
-        setShowModal(false);
-    };
-
-    const handleUpdate = () => {
-    };
-
-    const handleDelete = () => {
-    };
     const handleUsernameClick = (userId) => {
         console.log(`Clicked user with ID: ${userId}`);
     };
 
     return (
-        <div className="flex flex-wrap -mx-4">
+        <div className="flex flex-wrap -mx-4 justify-center">
             {posts && posts.length > 0 && posts.map(post =>
                 post.medias.some(media => {
                     const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.PNG', '.JPG', '.JPEG', '.GIF', '.BMP', '.WEBP'];
@@ -371,7 +414,7 @@ const PostCard = ({ reloadPosts, avatar }) => {
 
                                 <div className="flex items-center justify-between mx-4 mt-3 mb-2">
                                     <div className="flex gap-5">
-                                        <div className="cursor-pointer" onClick={handleLikePost}>
+                                        <div className="cursor-pointer" onClick={() => handleLikeUnlikePost(post.id)}>
                                             <svg fill="#262626" height="24" viewBox="0 0 48 48" width="24">
                                                 <path d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"></path>
 
@@ -394,7 +437,6 @@ const PostCard = ({ reloadPosts, avatar }) => {
                                 </div>
                                 <div className="flex">
                                     <div className="font-semibold text-sm mx-4 mt-2 mb-4"
-
                                     >{post.totalLike} like</div>
                                     <div className="font-semibold text-sm mx-4 mt-2 mb-4">{post.totalComment} comments</div>
                                 </div>
@@ -439,29 +481,24 @@ const PostCard = ({ reloadPosts, avatar }) => {
                                             {/* Like, Reply, Time */}
                                             <div className="flex items-center text-xs text-gray-500 space-x-4 mt-1">
                                                 <span className="hover:underline cursor-pointer">{formatDistanceToNow(new Date(comment.createAt), { addSuffix: true })}</span>
-                                                <button className="hover:underline" onClick={handleLikeComment}>Like</button>
+                                                <button className="hover:underline" onClick={() => handleLikeComment(comment.id)}> {comment.totalLike} Like</button>
                                                 <button className="hover:underline">Reply</button>
                                             </div>
                                         </div>
-                                        <div className="mr-2" onClick={openModal}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-4 cursor-pointer">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
-                                            </svg>
-                                        </div>
-                                        {showModal && (
-                                            <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
-                                                <div className="bg-white rounded-lg p-8">
-                                                    <div className="flex justify-between">
-                                                        <h2 className="text-lg font-bold mb-4">Options</h2>
-                                                        <div className="cursor-pointer" onClick={closeModal}>X</div>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <button onClick={handleUpdate} className="bg-blue-500 text-white px-4 py-2 rounded-md mr-4">Update</button>
-                                                        <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded-md">Delete</button>
-                                                    </div>
-                                                </div>
+                                        <div className="mr-4 flex">
+                                            <div className="hover:text-blue-500 text-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
+                                                </svg>
                                             </div>
-                                        )}
+                                            <div onClick={() => handleDeleteComment(comment.id)}
+                                                className=" hover:text-red-500 text-sm ml-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                    strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                </svg>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             ))

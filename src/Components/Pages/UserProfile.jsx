@@ -6,6 +6,8 @@ import defaultBackground from '../../assets/imgs/IMG_1052.JPG';
 import PostCardUserProfile from '../Main/PostCardUserProfile';
 import { Url, avatarBaseUrl } from '../service/constants';
 import { useParams } from "react-router-dom";
+import NavLogo from '../Navbar/NavLogo';
+import NavRepo from "../Navbar/NavRepo";
 
 const UserProfile = () => {
     const [friendInfo, setFriendInfo] = useState(null);
@@ -17,6 +19,19 @@ const UserProfile = () => {
     const [showFollowingModal, setShowFollowingModal] = useState(false);
     const [userInfo, setUserInfo] = useState({});
     const { id } = useParams();
+    const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1024);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLargeScreen(window.innerWidth > 1024);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     // console.log(id);
 
@@ -109,7 +124,22 @@ const UserProfile = () => {
     return (
         <div className="w-full bg-gray-100">
             <div className="fixed z-10 w-full bg-white">
-                <Navbar />
+                {isLargeScreen ? (
+                    <div className="fixed top-0 z-10 w-full bg-white">
+                        <Navbar />
+                    </div>
+                ) : (
+                    <div className="fixed bottom-0 z-10 w-full bg-white h-16 shadow-lg">
+                        <NavRepo />
+                    </div>
+                )}
+                {!isLargeScreen && (
+                    <div className="fixed top-0 z-10 w-full bg-white h-12 shadow-lg">
+                        <div className="flex">
+                            <NavLogo />
+                        </div>
+                    </div>
+                )}
             </div>
             <div className="flex mb-6 flex-wrap items-center  justify-center bg-gray-100">
                 <div className="container   bg-white  shadow-lg    transform   duration-200 easy-in-out">
@@ -147,7 +177,7 @@ const UserProfile = () => {
             </div>
             <div className="mx-auto bg-gray-100">
                 <div className="gap-5 w-4/5 mx-auto flex flex-col md:flex-row">
-                    <div className="mt-8 justify-center w-[40%] mx-auto hidden md:block">
+                    <div className="mt-8">
                         <div className="bg-white overflow-hidden shadow rounded-lg border">
                             <div className="px-4 py-5 sm:px-6">
                                 <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -202,12 +232,12 @@ const UserProfile = () => {
                                 </dl>
                             </div>
                         </div>
-                        <div className="mt-8">
+                        <div className="mt-4">
                             <LeftSideProfilePicUser userId={id} />
 
                         </div>
                     </div>
-                    <div className="w-full lg:w-[60%] mx-auto justify-center mt-8 md:pl-0 md:pr-8">
+                    <div className="w-full lg:w-[60%] mx-auto justify-center mt-4 md:pl-0">
                         <div className="justify-center items-center">
                             <PostCardUserProfile userId={id} />
                         </div>

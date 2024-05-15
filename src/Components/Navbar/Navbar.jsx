@@ -7,16 +7,6 @@ import userService from '../service/userService';
 const Navbar = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [error, setError] = useState(null);
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        gender: false, // Gender is now a boolean
-        phoneNumber: '',
-        dateOfBirth: '',
-        address: '',
-        mail: '',
-        createAt: '',
-    });
 
     useEffect(() => {
         const fetchUserProfile = async () => {

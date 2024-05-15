@@ -1,12 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import CardListFollower from "../Friends/CardListFollower";
 import CardListFollowing from "../Friends/CardListFollowing";
 import LeftSide from "../LeftSidebar/LeftSide";
+import NavRepo from "../Navbar/NavRepo";
+import NavLogo from '../Navbar/NavLogo';
 
 const Friends = () => {
     const [currentFunction, setCurrentFunction] = useState("following");
+    const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1024);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLargeScreen(window.innerWidth > 1024);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const toggleFunction = () => {
         setCurrentFunction(prevFunction => prevFunction === "following" ? "follower" : "following");
@@ -14,9 +29,21 @@ const Friends = () => {
 
     return (
         <div className="w-full h-screen">
-            <div className="fixed top-0 z-10 w-full bg-white">
-                <Navbar></Navbar>
-            </div>
+            {isLargeScreen ? (
+                <div className="fixed top-0 z-10 w-full bg-white">
+                    <Navbar />
+                </div>
+            ) : (
+                <div className="fixed bottom-0 z-10 w-full bg-white h-16 shadow-lg">
+                    <NavRepo />
+                </div>
+            )}
+
+            {!isLargeScreen && (
+                <div className="fixed top-0 z-10 w-full bg-white h-12 shadow-lg">
+                    <NavLogo />
+                </div>
+            )}
             <div className="flex bg-gray-900">
                 <div className="flex-auto w-[25%] fixed hidden lg:block top-14">
                     <LeftSide></LeftSide>

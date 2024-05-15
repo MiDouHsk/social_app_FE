@@ -40,7 +40,7 @@ const LeftSideProfilePic = () => {
         <div className="flex flex-col bg-white pb-4 border-2 rounded-xl shadow-lg mb-4">
             <div className="flex flex-col font-bold items-center pt-10 mb-10">
                 <p className="font-roboto font-medium text-md no-underline tracking-normal leading-none">
-                    User's Posts
+                    Hình ảnh
                 </p>
             </div>
             <div className="flex flex-col mx-1">

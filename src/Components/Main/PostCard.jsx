@@ -345,11 +345,11 @@ const PostCard = ({ reloadPosts, avatar }) => {
 
                                 </div>
                             </Link>
-                            <div className="w-full flex justify-end cursor-pointer mr-10">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24"
-                                    strokeWidth={1.5} stroke="currentColor" className="h-10 w-10 hover:bg-blue-100 rounded-xl p-2">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                            <div className="w-full flex justify-end cursor-pointer " onClick={() => handleSavePost(post.id)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"
+                                    className="w-6 h-6 mr-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                                 </svg>
                             </div>
                         </div>
@@ -374,6 +374,23 @@ const PostCard = ({ reloadPosts, avatar }) => {
                                 ))}
                             </div>
                         </div>
+                        {/* Actions */}
+                        <div className="flex justify-between items-center px-4 py-2">
+                            <div className="flex items-center space-x-4">
+                                {/* Your existing code for like, comment, and share */}
+                            </div>
+                            <div className="flex items-center space-x-4 justify-end">
+                                <p className="font-roboto text-sm text-gray-700 no-underline tracking-normal leading-none">
+                                    {post.totalLike} Like
+                                </p>
+                                <p className="font-roboto text-sm text-gray-700 no-underline tracking-normal leading-none">
+                                    {post.totalComment} Comments
+                                </p>
+                                <p className="font-roboto text-sm text-gray-700 no-underline tracking-normal leading-none">
+                                    {post.totalShare} Share
+                                </p>
+                            </div>
+                        </div>
                         <div className="flex justify-around items-center pt-4">
                             {/* Nút "Comments" */}
                             <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={() => handleOpenCommentsModal(post)}>
@@ -381,9 +398,6 @@ const PostCard = ({ reloadPosts, avatar }) => {
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-4">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
                                     </svg>
-                                    <p className="font-roboto  text-md text-gray-700 no-underline tracking-normal leading-none">
-                                        {post.totalComment} Comments
-                                    </p>
                                 </div>
                             </div>
                             <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={() => handleLikeUnlikePost(post.id)}>
@@ -396,9 +410,6 @@ const PostCard = ({ reloadPosts, avatar }) => {
                                         strokeLinejoin="round"
                                         d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
                                 </svg>
-                                <p className="font-roboto text-md text-gray-700 no-underline tracking-normal leading-none">
-                                    {post.totalLike} Like
-                                </p>
                             </div>
 
                             <button
@@ -408,20 +419,7 @@ const PostCard = ({ reloadPosts, avatar }) => {
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 mr-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                                 </svg>
-                                <p className="font-roboto  text-md text-gray-700 no-underline tracking-normal leading-none">
-                                    {post.totalShare} Share
-                                </p>
                             </button>
-                            <div className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100" onClick={() => handleSavePost(post.id)}>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"
-                                    className="w-6 h-6 mr-4">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                                </svg>
-                                <p className="font-roboto  text-md text-gray-700 no-underline tracking-normal leading-none">
-                                    Saved
-                                </p>
-                            </div>
                         </div>
                     </div>
                 </div>

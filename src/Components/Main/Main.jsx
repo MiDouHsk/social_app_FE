@@ -162,14 +162,18 @@ const Main = () => {
                         <p className="font-roboto font-medium text-md text-gray-700 no-underline tracking-normal leading-none">
                             Feeling
                         </p> */}
+                        <button type="submit" onClick={openModal} className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-20 py-3 text-center me-2 mb-2 w-full ">
+                            Created post
+                        </button>
                     </div>
                 </div>
             </div>
             {showModal && (
-                <div id="crud-modal" tabIndex="-1" aria-hidden="true" className="fixed inset-0 overflow-y-auto z-50">
-                    <div className="flex items-center min-h-screen">
+                <div id="crud-modal"
+                    tabIndex="-1" aria-hidden="true" className="fixed inset-0 overflow-y-auto z-30">
+                    <div className="flex justify-center items-center min-h-screen">
                         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                        <div style={{ marginLeft: '30%', width: '40%' }} className="absolute mx-auto p-6 bg-white rounded-lg shadow-md z-50">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mx-auto p-6 bg-white rounded-lg shadow-md z-30 max-w-lg">
                             <form onSubmit={handleSubmit}>
                                 <div className='flex justify-between'>
                                     <div className='flex'>
@@ -203,7 +207,8 @@ const Main = () => {
                                         value={body}
                                         onChange={(e) => setBody(e.target.value)}
                                         required
-                                        className="mt-1 p-2 block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="viết những gì bạn nghĩ!"
+                                        className="mt-1 p-2 block w-full bg-gray-100 border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                     ></textarea>
                                 </div>
                                 <button type="submit" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-20 py-3 text-center me-2 mb-2 w-full ">
